@@ -203,6 +203,18 @@ sub _group_files {
   $file;
 }
 
+use File::Basename;
+
+sub dirname_root {
+  my ($dirname) = @_;
+  my $root = $dirname;
+  while (dirname($root) ne '.' && dirname($root) ne '/') {
+    print "$root\n";
+    $root = dirname($root);
+  }
+  return $root;
+}
+
 sub graph {
   my ($self) = @_;
   my $graph = Graph->new;
@@ -210,12 +222,14 @@ sub graph {
   foreach my $module (keys %{ $self->{files}}) {
     my $file = _group_files(@{ $self->files($module) });
     $graph->add_vertex($file);
+    $graph->set_vertex_attribute($file, 'group', dirname_root($file));
   }
   foreach my $caller (keys %{$self->calls}) {
     my $calling_file = $self->_function_to_file($caller);
     next unless $calling_file;
     $calling_file = _group_files(@{$calling_file});
     $graph->add_vertex($calling_file);
+    $graph->set_vertex_attribute($calling_file, 'group', dirname_root($calling_file));
     foreach my $callee (keys %{$self->calls->{$caller}}) {
       my $called_file = $self->_function_to_file($callee);
       next unless ($calling_file && $called_file);
@@ -229,6 +243,7 @@ sub graph {
     next unless $subclass_file;
     $subclass_file = _group_files(@{$subclass_file});
     $graph->add_vertex($subclass_file);
+    $graph->set_vertex_attribute($subclass_file, 'group', dirname_root($subclass_file));
     foreach my $superclass ($self->inheritance($subclass)) {
       my $superclass_file = $self->files($superclass);
       next unless $superclass_file;

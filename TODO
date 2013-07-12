@@ -9,3 +9,29 @@
   "Please note that this module has been DEPRECATED in favor of ZMQ::LibZMQ2,
   ZMQ::LibZMQ3, and ZMQ. see https://github.com/lestrrat/p5-ZMQ and other CPAN
   pages."
+
+* Implementar na ferramenta "dsm" suporte a remover o caminho absoluto
+  dos arquivos do projeto e manter apenas o caminho a partir da raiz principal
+  do projeto analisado. Fazer isto usando o algoritmo Longest common substring
+  problem[1] através de uma Suffix Tree[2]. Existe uma implementação de Suffix
+  Tree para C chamada libstree[3] e uma interface em Perl para esta implementação
+  Tree::Suffix[4]. Infelizmente nenhum dos dois estão empacotados no Debian, mas
+  existe um pacote Debian-like de uma distribuição chamada Kali Linux[5],
+  problema que a libstree usa uma licença não compatível com licenças aceitas
+  pelo Debian. O que fazer?
+
+  1. Gerar pacote libstree e instalar no sistema
+  2. Empacotar Tree::Suffix e instalar
+  3. Implementar alterações em analizo-dsm
+  4. Avaliar resultados
+  5. Em caso positivo continuar com os passos abaixo
+  6. Solicitar ao desenvolvedor do libstree adotar uma licença livre
+  7. Submeter libstree ao Debian
+  8. Submeter Tree::Suffix ao Debian
+  9. Finalizar alterações no analizo e fazer pull-request
+
+  [1] http://en.wikipedia.org/wiki/Longest_common_substring_problem
+  [2] http://en.wikipedia.org/wiki/Suffix_tree
+  [3] http://www.icir.org/christian/libstree/
+  [4] http://metacpan.org/module/Tree::Suffix
+  [5] http://git.kali.org/gitweb/?p=packages/libstree.git;a=summary
